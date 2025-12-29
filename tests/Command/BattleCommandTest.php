@@ -3,6 +3,7 @@
 namespace App\Tests\Command;
 
 use App\Service\BattleService;
+use App\Service\DamageCalculatorService;
 use App\Service\HeroFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -15,7 +16,8 @@ class BattleCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->battleService = new BattleService();
+        $damageCalculator = new DamageCalculatorService();
+        $this->battleService = new BattleService($damageCalculator);
         $this->heroFactory = new HeroFactory();
     }
 

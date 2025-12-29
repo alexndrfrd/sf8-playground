@@ -8,6 +8,11 @@ class BattleService
 {
     private const MAX_ROUNDS = 100; // Safety limit to prevent infinite loops
 
+    public function __construct(
+        private readonly DamageCalculatorService $damageCalculator
+    ) {
+    }
+
     public function battle(Hero $hero1, Hero $hero2): array
     {
         // Reset health to max for both heroes
@@ -24,11 +29,8 @@ class BattleService
         while ($hero1->isAlive() && $hero2->isAlive() && $roundNumber < self::MAX_ROUNDS) {
             $roundNumber++;
 
-            // Calculate damage (base damage + random variation ±20%)
-            $baseDamage = $attacker->getDamage();
-            $variation = (int) ($baseDamage * 0.2);
-            $damage = $baseDamage + random_int(-$variation, $variation);
-            $damage = max(1, $damage); // Minimum 1 damage
+            // Calculate damage using injected service
+            $damage = $this->damageCalculator->calculateDamage($attacker->getDamage());
 
             // Apply damage
             $defender->takeDamage($damage);

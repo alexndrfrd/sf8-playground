@@ -4,6 +4,7 @@ namespace App\Tests\Service;
 
 use App\Entity\Hero;
 use App\Service\BattleService;
+use App\Service\DamageCalculatorService;
 use App\Service\HeroFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,8 @@ class BattleServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->battleService = new BattleService();
+        $damageCalculator = new DamageCalculatorService();
+        $this->battleService = new BattleService($damageCalculator);
         $this->heroFactory = new HeroFactory();
     }
 
