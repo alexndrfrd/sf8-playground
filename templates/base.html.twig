@@ -2,9 +2,138 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Hero Battle Arena{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚔️</text></svg>">
         {% block stylesheets %}
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    min-height: 100vh;
+                    color: #333;
+                }
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                nav {
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 1rem 0;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                }
+                nav .container {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                nav h1 {
+                    color: #667eea;
+                    font-size: 1.5rem;
+                }
+                nav ul {
+                    list-style: none;
+                    display: flex;
+                    gap: 1.5rem;
+                }
+                nav a {
+                    text-decoration: none;
+                    color: #333;
+                    font-weight: 500;
+                    transition: color 0.3s;
+                }
+                nav a:hover {
+                    color: #667eea;
+                }
+                .card {
+                    background: white;
+                    border-radius: 10px;
+                    padding: 2rem;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                }
+                .btn {
+                    display: inline-block;
+                    padding: 0.75rem 1.5rem;
+                    background: #667eea;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    transition: background 0.3s;
+                }
+                .btn:hover {
+                    background: #5568d3;
+                }
+                .btn-danger {
+                    background: #e74c3c;
+                }
+                .btn-danger:hover {
+                    background: #c0392b;
+                }
+                .alert {
+                    padding: 1rem;
+                    border-radius: 5px;
+                    margin-bottom: 1rem;
+                }
+                .alert-success {
+                    background: #d4edda;
+                    color: #155724;
+                    border: 1px solid #c3e6cb;
+                }
+                .alert-error {
+                    background: #f8d7da;
+                    color: #721c24;
+                    border: 1px solid #f5c6cb;
+                }
+                .hero-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                    gap: 1.5rem;
+                }
+                .hero-card {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 1.5rem;
+                    border-radius: 10px;
+                    transition: transform 0.3s;
+                }
+                .hero-card:hover {
+                    transform: translateY(-5px);
+                }
+                .hero-card h3 {
+                    margin-bottom: 1rem;
+                    font-size: 1.5rem;
+                }
+                .hero-stats {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.5rem;
+                    margin-top: 1rem;
+                }
+                .stat {
+                    background: rgba(255,255,255,0.2);
+                    padding: 0.5rem;
+                    border-radius: 5px;
+                }
+                .stat-label {
+                    font-size: 0.8rem;
+                    opacity: 0.9;
+                }
+                .stat-value {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                }
+            </style>
         {% endblock %}
 
         {% block javascripts %}
@@ -12,6 +141,24 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav>
+            <div class="container">
+                <h1>⚔️ Hero Battle Arena</h1>
+                <ul>
+                    <li><a href="{{ path('game_home') }}">Home</a></li>
+                    <li><a href="{{ path('game_create_hero') }}">Create Hero</a></li>
+                    <li><a href="{{ path('game_battle') }}">Battle</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-error">{{ message }}</div>
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>
