@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Character{% endblock %}
+
+{% block body %}
+<div class="card">
+    <h1>✨ Create New Character</h1>
+    <p>Fill in the details to create a new character for battle!</p>
+</div>
+
+<div class="card">
+    <form method="POST" action="{{ path('character_store') }}">
+        <div style="display: grid; gap: 1.5rem;">
+            <div>
+                <label for="character_name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                    Character Name *
+                </label>
+                <input 
+                    type="text" 
+                    id="character_name" 
+                    name="character[name]" 
+                    required 
+                    minlength="1"
+                    maxlength="255"
+                    placeholder="Enter character name"
+                    style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                    value="{{ app.request.request.get('character')['name'] ?? '' }}"
+                >
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label for="character_strength" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                        💪 Strength *
+                    </label>
+                    <input 
+                        type="number" 
+                        id="character_strength" 
+                        name="character[strength]" 
+                        required 
+                        min="0"
+                        max="100"
+                        placeholder="10"
+                        style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                        value="{{ app.request.request.get('character')['strength'] ?? 10 }}"
+                    >
+                    <small style="color: #666; font-size: 0.85rem;">Affects attack damage</small>
+                </div>
+
+                <div>
+                    <label for="character_intelligence" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                        🧠 Intelligence *
+                    </label>
+                    <input 
+                        type="number" 
+                        id="character_intelligence" 
+                        name="character[intelligence]" 
+                        required 
+                        min="0"
+                        max="100"
+                        placeholder="10"
+                        style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                        value="{{ app.request.request.get('character')['intelligence'] ?? 10 }}"
+                    >
+                    <small style="color: #666; font-size: 0.85rem;">Future abilities</small>
+                </div>
+
+                <div>
+                    <label for="character_health" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                        ❤️ Health *
+                    </label>
+                    <input 
+                        type="number" 
+                        id="character_health" 
+                        name="character[health]" 
+                        required 
+                        min="1"
+                        max="1000"
+                        placeholder="100"
+                        style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                        value="{{ app.request.request.get('character')['health'] ?? 100 }}"
+                    >
+                    <small style="color: #666; font-size: 0.85rem;">Starting health points</small>
+                </div>
+            </div>
+
+            <div>
+                <label for="character_race" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                    🏛️ Race *
+                </label>
+                <select 
+                    id="character_race" 
+                    name="character[race]" 
+                    required
+                    style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                >
+                    {% for key, race in races %}
+                        <option value="{{ key }}" {% if key == 'human' %}selected{% endif %}>
+                            {{ race.getName() }} (Crit: {{ (race.getCriticalHitChance() * 100)|number_format(0) }}%, Multiplier: {{ race.getCriticalHitMultiplier() }}x)
+                        </option>
+                    {% endfor %}
+                </select>
+                <small style="color: #666; font-size: 0.85rem;">Each race has unique critical hit properties</small>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="flex: 1; font-size: 1.1rem; padding: 1rem;">
+                ✨ Create Character
+            </button>
+            <a href="{{ path('battle_index') }}" class="btn" style="background: #6c757d; text-decoration: none; padding: 1rem; text-align: center;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card" style="background: #f8f9fa; border-left: 4px solid #667eea;">
+    <h3>💡 Tips</h3>
+    <ul style="margin-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Strength</strong> determines how much damage your character deals in battle</li>
+        <li><strong>Intelligence</strong> may be used for future special abilities</li>
+        <li><strong>Health</strong> determines how much damage your character can take before being defeated</li>
+        <li>Balance your stats for the best battle performance!</li>
+    </ul>
+</div>
+{% endblock %}
+

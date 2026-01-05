@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Battle Arena - Select Fighters{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>⚔️ Battle Arena</h1>
+            <p>Select two characters to battle each other!</p>
+        </div>
+        <a href="{{ path('character_create') }}" class="btn" style="text-decoration: none;">
+            ✨ Create Character
+        </a>
+    </div>
+</div>
+
+{% if characters|length < 2 %}
+    <div class="card">
+        <p>You need at least 2 characters to start a battle. Please create more characters first.</p>
+    </div>
+{% else %}
+    <div class="card">
+        <form method="POST" action="{{ path('battle_fight') }}" id="battle-form" data-turbo="false">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                    <h2>Select Fighter 1</h2>
+                    {% for character in characters %}
+                        <label style="display: block; padding: 1rem; margin: 0.5rem 0; background: #f5f5f5; border-radius: 5px; cursor: pointer;">
+                            <input type="radio" name="character1_id" value="{{ character.id }}" required>
+                            <strong>{{ character.name }}</strong>
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                                <span>🏛️ Race: {{ character.race.getName() }}</span> | 
+                                <span>💪 Strength: {{ character.strength }}</span> | 
+                                <span>🧠 Intelligence: {{ character.intelligence }}</span> | 
+                                <span>❤️ Health: {{ character.health }}</span>
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
+                
+                <div>
+                    <h2>Select Fighter 2</h2>
+                    {% for character in characters %}
+                        <label style="display: block; padding: 1rem; margin: 0.5rem 0; background: #f5f5f5; border-radius: 5px; cursor: pointer;">
+                            <input type="radio" name="character2_id" value="{{ character.id }}" required>
+                            <strong>{{ character.name }}</strong>
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                                <span>🏛️ Race: {{ character.race.getName() }}</span> | 
+                                <span>💪 Strength: {{ character.strength }}</span> | 
+                                <span>🧠 Intelligence: {{ character.intelligence }}</span> | 
+                                <span>❤️ Health: {{ character.health }}</span>
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; font-size: 1.2rem; padding: 1rem;">
+                🗡️ Start Battle!
+            </button>
+        </form>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('battle-form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        const char1 = document.querySelector('input[name="character1_id"]:checked');
+                        const char2 = document.querySelector('input[name="character2_id"]:checked');
+                        
+                        console.log('Form submitted', { char1: char1?.value, char2: char2?.value });
+                        
+                        if (!char1 || !char2) {
+                            e.preventDefault();
+                            alert('Please select two characters to battle!');
+                            return false;
+                        }
+                        
+                        if (char1.value === char2.value) {
+                            e.preventDefault();
+                            alert('A character cannot battle itself!');
+                            return false;
+                        }
+                        
+                        // Allow form to submit
+                        console.log('Form validation passed, submitting...');
+                    });
+                }
+            });
+        </script>
+    </div>
+{% endif %}
+
+<div class="card">
+    <h2>Available Characters</h2>
+    <div class="hero-grid">
+        {% for character in characters %}
+            <div class="hero-card">
+                <h3>{{ character.name }}</h3>
+                <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(255,255,255,0.2); border-radius: 5px; font-size: 0.9rem;">
+                    🏛️ {{ character.race.getName() }} | 
+                    ⚡ Crit: {{ (character.criticalHitChance * 100)|number_format(0) }}% ({{ character.criticalHitMultiplier }}x)
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-label">💪 Strength</div>
+                        <div class="stat-value">{{ character.strength }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">🧠 Intelligence</div>
+                        <div class="stat-value">{{ character.intelligence }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">❤️ Health</div>
+                        <div class="stat-value">{{ character.health }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">⚡ Total Power</div>
+                        <div class="stat-value">{{ character.strength + character.intelligence }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

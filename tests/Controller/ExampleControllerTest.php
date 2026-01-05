@@ -41,6 +41,11 @@ class ExampleControllerTest extends WebTestCase
         ], json_encode(['data' => 'test']));
 
         $this->assertResponseIsSuccessful();
+        
+        $response = $client->getResponse();
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('test', $data['input']);
+        $this->assertEquals('TEST (processed)', $data['output']);
     }
 }
 

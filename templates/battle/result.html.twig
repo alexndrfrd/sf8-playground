@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Battle Result{% endblock %}
+
+{% block body %}
+<div class="card">
+    <h1>🏆 Battle Result</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+        <div style="text-align: center; padding: 2rem; background: #f5f5f5; border-radius: 10px;">
+            <h2>{{ character1.name }}</h2>
+            <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(102, 126, 234, 0.1); border-radius: 5px; font-weight: bold; color: #667eea;">
+                🏛️ {{ character1.race.getName() }}
+            </div>
+            <div style="margin-top: 1rem;">
+                <div>💪 Strength: {{ character1.strength }}</div>
+                <div>🧠 Intelligence: {{ character1.intelligence }}</div>
+                <div>❤️ Health: {{ character1.health }}</div>
+                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                    ⚡ Crit: {{ (character1.criticalHitChance * 100)|number_format(0) }}% ({{ character1.criticalHitMultiplier }}x)
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; padding: 2rem; background: #f5f5f5; border-radius: 10px;">
+            <h2>{{ character2.name }}</h2>
+            <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(231, 76, 60, 0.1); border-radius: 5px; font-weight: bold; color: #e74c3c;">
+                🏛️ {{ character2.race.getName() }}
+            </div>
+            <div style="margin-top: 1rem;">
+                <div>💪 Strength: {{ character2.strength }}</div>
+                <div>🧠 Intelligence: {{ character2.intelligence }}</div>
+                <div>❤️ Health: {{ character2.health }}</div>
+                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                    ⚡ Crit: {{ (character2.criticalHitChance * 100)|number_format(0) }}% ({{ character2.criticalHitMultiplier }}x)
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; margin: 2rem 0;">
+        <h2 style="color: white; margin-bottom: 1rem;">🏆 Winner: {{ battleResult.winner.name }}</h2>
+        <p>Battle lasted {{ battleResult.turns }} turn(s)</p>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h2>📜 Battle History</h2>
+        <div style="max-height: 500px; overflow-y: auto; margin-top: 1rem;">
+            {% for turn in battleResult.history %}
+                <div style="padding: 1rem; margin: 0.5rem 0; background: #f5f5f5; border-radius: 5px; border-left: 4px solid {% if turn.isCritical %}#e74c3c{% else %}#667eea{% endif %};">
+                    <div style="font-weight: bold; margin-bottom: 0.5rem;">
+                        Turn {{ turn.turn }}: 
+                        <span style="color: #667eea;">{{ turn.attacker }}</span> 
+                        attacks 
+                        <span style="color: #e74c3c;">{{ turn.defender }}</span>
+                        {% if turn.isCritical %}
+                            <span style="color: #e74c3c; font-size: 1.2em;">💥 CRITICAL HIT!</span>
+                        {% endif %}
+                    </div>
+                    <div style="color: #666; font-size: 0.9rem;">
+                        Damage: <strong>{{ turn.damage }}</strong> | 
+                        Defender Health: <strong>{{ turn.defenderHealth }}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ path('battle_index') }}" class="btn">⚔️ Battle Again</a>
+    </div>
+</div>
+{% endblock %}
+
